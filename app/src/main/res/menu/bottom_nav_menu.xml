@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:title="@string/add"
+        android:id="@+id/menu_items_add"
+        android:icon="@drawable/ic_add_location_24"/>
+
+    <item
+        android:title="@string/map"
+        android:id="@+id/menu_items_map"
+        android:icon="@drawable/ic_map_24"/>
+
+    <item
+        android:title="@string/save"
+        android:id="@+id/menu_items_save"
+        android:icon="@drawable/ic_bookmarks_24"/>
+
+    <item
+        android:title="@string/manage"
+        android:id="@+id/menu_items_settings"
+        android:icon="@drawable/ic_settings_24"/>
+</menu>

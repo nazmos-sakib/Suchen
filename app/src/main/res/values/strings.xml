@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Suchen</string>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">iMHkoKnCkvGfTr0E3gM21UgcRcALY54RJwjPDZiz</string>
+    <string name="back4app_client_key">o3doai8x9aUEzkZxDivkGB5TM2VKYebbg1V9azBs</string>
+    <string name="save">Save</string>
+    <string name="map">Map</string>
+    <string name="manage">Manage</string>
+    <string name="add">Add</string>
+    <string name="home">Home</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>
