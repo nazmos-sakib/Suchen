@@ -5,6 +5,7 @@
     <!-- Change the following strings as required -->
     <string name="back4app_app_id">iMHkoKnCkvGfTr0E3gM21UgcRcALY54RJwjPDZiz</string>
     <string name="back4app_client_key">o3doai8x9aUEzkZxDivkGB5TM2VKYebbg1V9azBs</string>
+
     <string name="save">Save</string>
     <string name="map">Map</string>
     <string name="manage">Manage</string>
@@ -12,6 +13,25 @@
     <string name="home">Home</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="permissionDeniedText">This app need your permission to access location. With out this, the app cannot function properly. you can grant location permision from settings</string>
+    <string name="mapSpeakiableText">current location in map</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+    <string name="cycling">Cycling</string>
+    <string name="standard">Standard</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="satellite">Satellite</string>
+    <string name="transport">Transport</string>
+    <string name="toolbar_title">Suchen</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_to_login">Have an account? Login from <span><u><i>here</i></u></span> </string>
+    <string name="developed_by_sakib"><i>Developed by Sakib</i></string>
+    <string name="register">REGISTER</string>
+    <string name="male_avatar_4">male_avater_4</string>
+    <string name="male_avatar_3">male_avater_3</string>
+    <string name="isFountainActive">Is the Fountain Currently Active?</string>
 
 
 </resources>

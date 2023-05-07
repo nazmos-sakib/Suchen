@@ -3,6 +3,11 @@
 
 
     <item
+        android:title="@string/search"
+        android:id="@+id/menu_items_search"
+        android:icon="@drawable/ic_baseline_search_24"/>
+
+    <item
         android:title="@string/add"
         android:id="@+id/menu_items_add"
         android:icon="@drawable/ic_add_location_24"/>

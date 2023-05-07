@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item
+        android:gravity="center"
+        android:id="@+id/menu_layout_standArd"
+        android:title="@string/standard"/>
+    <item
+        android:id="@+id/menu_layout_satellite"
+        android:title="@string/satellite"/>
+    <item
+        android:id="@+id/menu_layout_hybrid"
+        android:title="@string/hybrid"/>
+    <item
+        android:id="@+id/menu_layout_cycling"
+        android:title="@string/cycling"/>
+    <item
+        android:id="@+id/menu_layout_transport"
+        android:title="@string/transport"/>
+    <item
+        android:layout_marginTop="20dp"
+        android:id="@+id/menu_layout_cancel"
+        android:title="@string/cancel"/>
+</menu>
