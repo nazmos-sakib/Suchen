@@ -252,6 +252,8 @@ public class AddFragment extends Fragment {
                     }
                 });
 
+                m.setImage(getResources().getDrawable(R.drawable.fountain));
+
                 m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
                 binding.mapAddFragment.getOverlays()
                         .add(m);
@@ -287,7 +289,8 @@ public class AddFragment extends Fragment {
 
         Button addBtn = view.findViewById(R.id.btn_add_dialog);
         addBtn.setOnClickListener(View->{
-            showAddToServerDialog(m);
+            showAddToServerDialog(m,alertDialog);
+
         });
 
         //if click dismiss alert dialog and and the marker overlay
@@ -297,10 +300,10 @@ public class AddFragment extends Fragment {
         binding.mapAddFragment.getOverlays().remove(m);
         });
 
-
         alertDialog.show();
     }
-    private void showAddToServerDialog(Marker m) {
+    private void showAddToServerDialog(Marker m, AlertDialog  firstDialog) {
+        final boolean uploadSuccess = false;
         // Create the second AlertDialog object and set the title
         AlertDialog locationDetailsDialog = new AlertDialog.Builder(activityContext)
                 .setTitle("Details")
@@ -359,14 +362,29 @@ public class AddFragment extends Fragment {
             } else {
                 warningEditView.setVisibility(android.view.View.INVISIBLE);
                 Log.d(TAG, "showAddToServerDialog: -> before inserting");
+                //ParseObject fountainAddToServer = new ParseObject("testDemo");
                 ParseObject fountainAddToServer = new ParseObject("fountainLocation");
                 fountainAddToServer.put("title",title); //Column name and value
+                Log.d(TAG, "showAddToServerDialog: ->title-> "+title);
                 fountainAddToServer.put("description",description);
-                fountainAddToServer.put("location", new ParseGeoPoint( m.getPosition().getLatitude(), m.getPosition().getLongitude()));
+                Log.d(TAG, "showAddToServerDialog: ->description-> "+description);
+
+                ParseGeoPoint pGeoPoint = new ParseGeoPoint( m.getPosition().getLatitude(), m.getPosition().getLongitude());
+                fountainAddToServer.put("location", pGeoPoint);
+                Log.d(TAG, "showAddToServerDialog: ->pGeoPoint-> "+ pGeoPoint.toString());
+
                 fountainAddToServer.put("userWhoAddedThis",ParseUser.getCurrentUser().getObjectId());
+                Log.d(TAG, "showAddToServerDialog: ->userWhoAddedThis-> "+ParseUser.getCurrentUser().getObjectId().toString());
+
                 fountainAddToServer.put("isCurrentlyActive",isFountainActiveView.isChecked());
+                Log.d(TAG, "showAddToServerDialog: ->isCurrentlyActive-> "+isFountainActiveView.isChecked());
+
                 //combining string and timestamp for naming file
-                fountainAddToServer.put("image", new ParseFile("image-"+new Timestamp(new Date().getTime()).toString(), data));
+                //ParseFile parseFile = new ParseFile("image-"+new Timestamp(new Date().getTime()).toString(), data);
+                ParseFile parseFile = new ParseFile("image-", data);
+                fountainAddToServer.put("image", parseFile);
+                Log.d(TAG, "showAddToServerDialog: ->image-> "+parseFile.toString());
+
 
                 fountainAddToServer.saveInBackground(new SaveCallback() { //upload file to the parse server
                     //using this call back function will return extra information like if it failed or succeed to upload the file
@@ -375,12 +393,16 @@ public class AddFragment extends Fragment {
                         if (e==null) { // no error occurred
                             Log.d(TAG, "parse server upload->done: -> Succeed");
                             locationDetailsDialog.cancel();
+                            //uploadSuccess = true;
+                            firstDialog.cancel();
+                            binding.mapAddFragment.getOverlays().remove(m);
                         } else {
                             e.getMessage();
                             e.getStackTrace();
                         }
                     }
                 });
+                Log.d(TAG, "showAddToServerDialog: -> end of inserting");
             }
 
 
@@ -391,17 +413,16 @@ public class AddFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();*/
         });
 
+
+
         // upon clicking cancel button it will close this dialog box
         Button btnCancel = view.findViewById(R.id.btn_cancel_dialogbox);
         btnCancel.setOnClickListener(View->{
             locationDetailsDialog.cancel();
         });
 
-
-
         // Create and show the AlertDialog
         locationDetailsDialog.show();
-
     }
 
     // Method for starting the activity for selecting image from phone storage
