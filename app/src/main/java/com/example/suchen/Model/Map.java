@@ -1,8 +1,9 @@
 package com.example.suchen.Model;
 
-import com.example.suchen.MainActivity;
+import com.example.suchen.LocationLoadedCallback;
 import com.example.suchen.R;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +14,12 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapEventsReceiver;
@@ -21,7 +27,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
@@ -29,6 +37,7 @@ import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
 
 public class Map {
     private static final String TAG = "Map->";
@@ -51,7 +60,6 @@ public class Map {
         this.ctx = ctx;
 
         this.mapController = mapView.getController();
-        initMyLocationOverlay();
     }
 
     public Map() {
@@ -86,7 +94,7 @@ public class Map {
 
     } //end default config
 
-    private void initMyLocationOverlay(){
+    public void initMyLocationOverlay(LocationLoadedCallback callback){
 
         //My Location overlay
         //not setting the location change listener
@@ -105,6 +113,8 @@ public class Map {
                 // This is where you can use updated location
                 mapController.setZoom(13f);
                 mapController.setCenter(new GeoPoint(location));
+                //Log.d(TAG, "onLocationChanged: "+location.toString());
+                callback.onLocationLoaded(new GeoPoint(location));
             }
         };
         //this.myLocationOverlay.enableMyLocation();
@@ -192,6 +202,30 @@ public class Map {
                         Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "singleTapConfirmedHelper: geo point-> " + p.getLatitude() + ", " + p.getLongitude());
                 //mapController.setCenter(p);
+                Marker m = new Marker(mapView);
+                m.setPosition(p);
+                m.setTextLabelBackgroundColor(
+                        Color.TRANSPARENT
+                );
+                m.setTextLabelForegroundColor(
+                        Color.RED
+                );
+                m.setIcon(ctx.getResources().getDrawable(R.drawable.ic_push_pin_red));
+
+                m.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker, MapView mapView) {
+                        showAddClearDialog(m);
+
+                        return true; // Return true to consume the event
+                    }
+                });
+
+                m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                mapView.getOverlays()
+                        .add(m);
+
+
                 return false;
             }
         };
@@ -251,6 +285,68 @@ public class Map {
         mMinimapOverlay.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         mapView.getOverlays().add(mMinimapOverlay);
     }
+
+    //on marker single click call this function
+    private void showAddClearDialog(Marker m) {
+        AlertDialog alertDialog  = new AlertDialog.Builder(ctx)
+                .setTitle("Find Direction")
+                .setMessage("you can clear the marker by clicking CLEAR button. " +
+                        "If you want to go to this location, click Show Direction")
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Clear any data or input fields
+                    }
+                })
+                .create();
+
+
+        // Inflate the view containing the EditText and Button
+        LayoutInflater inflater = LayoutInflater.from(ctx);
+        View view = inflater.inflate(R.layout.map_fragment_direction_clear_dialog, null);
+
+        // Set the view to the AlertDialog
+        alertDialog.setView(view);
+
+        Button directionBtn = view.findViewById(R.id.btn_direction_map_dialog);
+        directionBtn.setOnClickListener(View->{
+            //showAddToServerDialog(m,alertDialog);
+
+
+            GeoPoint userPosition = new GeoPoint(mapView.getMapCenter().getLatitude(),mapView.getMapCenter().getLongitude());
+            GeoPoint markerPosition = m.getPosition();
+            Polyline line = new Polyline(mapView);
+            line .addPoint(userPosition);
+            line .addPoint(markerPosition);
+            mapView.getOverlays().add(line);
+
+/*
+
+            RoadManager roadManager = new OSRMRoadManager(ctx);
+            ArrayList<GeoPoint> waypoints = new ArrayList<>();
+            waypoints.add(startPoint);
+            waypoints.add(endPoint);
+            Road road = roadManager.getRoad(waypoints);
+
+*/
+
+
+
+            alertDialog.cancel();
+
+        });
+
+        //if click dismiss alert dialog and and the marker overlay
+        Button clearBtn = view.findViewById(R.id.btn_clear_map_dialog);
+        clearBtn.setOnClickListener(View->{
+            alertDialog.dismiss();
+            mapView.getOverlays().remove(m);
+        });
+
+        alertDialog.show();
+    }
+
+
     public void setMiniMapZoomDifference(int z){
         mMinimapOverlay.setZoomDifference(z); // mini map 3 unit zoomed out than original view
     }

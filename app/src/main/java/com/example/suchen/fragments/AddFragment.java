@@ -252,7 +252,7 @@ public class AddFragment extends Fragment {
                     }
                 });
 
-                m.setImage(getResources().getDrawable(R.drawable.fountain));
+                //m.setImage(getResources().getDrawable(R.drawable.fountain));
 
                 m.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
                 binding.mapAddFragment.getOverlays()

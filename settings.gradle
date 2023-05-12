@@ -4,6 +4,9 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 dependencyResolutionManagement {
@@ -13,6 +16,9 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 rootProject.name = "Suchen"

@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.suchen.BuildConfig;
+import com.example.suchen.LocationLoadedCallback;
 import com.example.suchen.Model.BookmarkLocationModel;
 import com.example.suchen.Model.Map;
 import com.example.suchen.R;
@@ -34,7 +35,7 @@ import org.osmdroid.util.GeoPoint;
 import java.io.IOException;
 import java.util.List;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements LocationLoadedCallback {
 
     private static final String TAG = "SearchFragment->";
     FragmentSearchBinding binding;
@@ -104,6 +105,7 @@ public class SearchFragment extends Fragment {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
         map = new Map(binding.map,ctx);
+        map.initMyLocationOverlay(this);
         map.setDefaultConfiguration();
         //map.setUSGS_SATTileSource();
 
@@ -217,5 +219,10 @@ public class SearchFragment extends Fragment {
         if (currentFocus != null) {
             inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onLocationLoaded(GeoPoint location) {
+
     }
 }

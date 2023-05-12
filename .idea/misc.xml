@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/ic_add_location_24.xml" value="0.301" />
         <entry key="app/src/main/res/drawable/ic_baseline_circle_24.xml" value="0.1565" />
         <entry key="app/src/main/res/drawable/ic_baseline_close_white.xml" value="0.1515" />
+        <entry key="app/src/main/res/drawable/ic_baseline_push_pin_24.xml" value="0.127" />
         <entry key="app/src/main/res/drawable/ic_baseline_water_drop_24.xml" value="0.301" />
         <entry key="app/src/main/res/drawable/ic_bookmarks_24.xml" value="0.299" />
         <entry key="app/src/main/res/drawable/ic_edit_location_alt_24.xml" value="0.299" />
@@ -19,6 +20,8 @@
         <entry key="app/src/main/res/drawable/ic_layers_24.xml" value="0.301" />
         <entry key="app/src/main/res/drawable/ic_logout_24.xml" value="0.2525" />
         <entry key="app/src/main/res/drawable/ic_map_24.xml" value="0.299" />
+        <entry key="app/src/main/res/drawable/ic_push_pin_green.xml" value="0.127" />
+        <entry key="app/src/main/res/drawable/ic_push_pin_red.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/ic_settings_24.xml" value="0.299" />
         <entry key="app/src/main/res/drawable/ic_stand_dort_24.xml" value="0.301" />
         <entry key="app/src/main/res/drawable/ic_stand_point_24.xml" value="0.299" />
@@ -31,7 +34,8 @@
         <entry key="app/src/main/res/layout/activity_permission_denied.xml" value="0.29739583333333336" />
         <entry key="app/src/main/res/layout/add_fragment_add_clear_dialog.xml" value="0.2698412698412698" />
         <entry key="app/src/main/res/layout/add_fragment_add_to_server.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/add_fragment_add_to_server_dialog.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/add_fragment_add_to_server_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/bonuspack_bubble.xml" value="0.25" />
         <entry key="app/src/main/res/layout/bookmark_recycle_view.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_add.xml" value="0.24299065420560748" />
         <entry key="app/src/main/res/layout/fragment_bookmarks.xml" value="0.335" />
@@ -42,6 +46,9 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.29739583333333336" />
         <entry key="app/src/main/res/layout/fragment_show_bookmark.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/map_fragment_direction_clear_dialog.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/map_fragment_showDirection_clear_dialog.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/map_fragment_show_direction_clear_dialog.xml" value="0.375" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/menu/main_activity_toolbar_menue.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/menu/menu_map_layout_option.xml" value="0.25" />
