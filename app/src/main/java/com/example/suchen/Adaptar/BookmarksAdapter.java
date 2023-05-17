@@ -94,4 +94,8 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
             parent = itemView.parentBookmarkRecView;
         }
     }
+
+    public ArrayList<BookmarkLocationModel> getBookmarkLocationArrayList() {
+        return bookmarkLocationArrayList;
+    }
 }

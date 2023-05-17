@@ -5,6 +5,7 @@ import org.osmdroid.util.GeoPoint;
 public class BookmarkLocationModel {
     private String id;
     private String userId;
+    private String details;
     private String locationName;
     private String createdAt;
     private GeoPoint geoPoint;

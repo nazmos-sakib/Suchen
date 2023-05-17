@@ -6,7 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +23,10 @@ import com.example.suchen.R;
 import com.example.suchen.RecyclerViewClickListener;
 import com.example.suchen.databinding.FragmentBookmarksBinding;
 import com.example.suchen.fragments.Authentication.LoginFragment;
+import com.google.android.material.snackbar.Snackbar;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -54,6 +59,7 @@ public class BookmarksFragment extends Fragment implements RecyclerViewClickList
         if (currentUser != null) {
             // do stuff with the user
             Log.d(TAG, "onCreate: login user->"+currentUser.getUsername());
+
         } else {
             //user not logged in
             // show the signup or login screen
@@ -88,6 +94,9 @@ public class BookmarksFragment extends Fragment implements RecyclerViewClickList
         fetchDataFromServer();
         Log.d(TAG, "setRecViewAdapter: "+bookmarksAdapter.getItemCount());
 
+        //swipe implement
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(binding.recViewBookmarksFragment);
 
     }
 
@@ -117,6 +126,7 @@ public class BookmarksFragment extends Fragment implements RecyclerViewClickList
                             );
                             arrayList.add(b);
                         }
+
                         bookmarksAdapter.setAdapterData(arrayList);
                         binding.progressBarBookmarkFragment.setVisibility(View.INVISIBLE);
 
@@ -146,4 +156,46 @@ public class BookmarksFragment extends Fragment implements RecyclerViewClickList
         intent.putExtra("coin_id",clickedCoin.getCoin_id());
         startActivity(intent);*/
     }
+
+    ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            BookmarkLocationModel deletedObj = bookmarksAdapter.getBookmarkLocationArrayList().get(viewHolder.getAdapterPosition());
+            //Delete a Row--------------------------
+            ParseQuery<ParseObject> queryD = ParseQuery.getQuery("Bookmarks");
+            queryD.getInBackground(deletedObj.getId(), new GetCallback<ParseObject>() { //objectId is the primary key
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (e==null && object != null) {
+                        object.deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e==null){
+                                    //delete success
+                                    //bookmarkLocationArrayList.remove(viewHolder.getAdapterPosition());
+                                    bookmarksAdapter.getBookmarkLocationArrayList().remove(viewHolder.getAdapterPosition());
+                                    bookmarksAdapter.notifyDataSetChanged();
+
+
+                                    //soft acknowledgement
+                                    Snackbar snackbar =  Snackbar.make(binding.parentBookmarksFragment,"Item Deleted",Snackbar.LENGTH_SHORT);
+                                    snackbar.show();
+                                } else {
+                                    e.getMessage();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+
+        }
+    };
 }
