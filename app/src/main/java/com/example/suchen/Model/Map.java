@@ -55,6 +55,8 @@ public class Map {
     private ScaleBarOverlay mScaleBarOverlay;
     private CompassOverlay mCompassOverlay;
 
+    MapEventsOverlay eventsOverlay;
+
     public Map(MapView mapView, Context ctx) {
         this.mapView = mapView;
         this.ctx = ctx;
@@ -82,7 +84,7 @@ public class Map {
         addCompassOverlay();
 
         //on click get the clicked position geo
-        addEventListenerOverlay();
+        //addEventListenerOverlay();
 
         //change PersonIcon
         changePersonIcon(R.drawable.ic_baseline_circle_24);
@@ -186,7 +188,7 @@ public class Map {
         mapView.getOverlays().add(mCompassOverlay);
     }
 
-    private void addEventListenerOverlay(){
+    public void addEventListenerOverlay(){
         //----------------------------------------------------------
         //on click get the clicked position geo
         MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
@@ -230,8 +232,12 @@ public class Map {
             }
         };
 
-        MapEventsOverlay eventsOverlay = new MapEventsOverlay(ctx, mapEventsReceiver);
+        eventsOverlay = new MapEventsOverlay(ctx, mapEventsReceiver);
         mapView.getOverlays().add(eventsOverlay);
+    }
+
+    public void removeEventOverlay(){
+        mapView.getOverlays().remove(eventsOverlay);
     }
 
     private void changePersonIcon(int drawableToSet){

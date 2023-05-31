@@ -49,6 +49,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
@@ -60,7 +64,9 @@ import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.io.IOException;
@@ -280,6 +286,7 @@ public class MapFragment extends Fragment implements LocationLoadedCallback {
                 for (ParseObject obj: objects){
 
                     Marker m = new Marker(map.getMapView());
+                    m.setId("fountain_marker");
                     GeoPoint mLocation = new GeoPoint(obj.getParseGeoPoint("location").getLatitude(),obj.getParseGeoPoint("location").getLongitude());
                     m.setPosition(mLocation);
                     m.setTextLabelBackgroundColor(
@@ -336,7 +343,7 @@ public class MapFragment extends Fragment implements LocationLoadedCallback {
 
                         @Override
                         public void onMarkerDragStart(Marker marker) {
-                            showAddClearDialog(m);
+                            showDialogOnMarkerLongClick(m);
                         }
                     });
 
@@ -359,7 +366,7 @@ public class MapFragment extends Fragment implements LocationLoadedCallback {
 
 
     //on marker single click call this function
-    private void showAddClearDialog(Marker m) {
+    private void showDialogOnMarkerLongClick(Marker m) {
         AlertDialog alertDialog  = new AlertDialog.Builder(ctx)
                 .setTitle("Find Direction")
                 .setMessage("you can clear the marker by clicking CLEAR button. " +
@@ -375,114 +382,108 @@ public class MapFragment extends Fragment implements LocationLoadedCallback {
 
         // Inflate the view containing the EditText and Button
         LayoutInflater inflater = LayoutInflater.from(ctx);
-        View view = inflater.inflate(R.layout.map_fragment_direction_clear_dialog, null);
+        View view = inflater.inflate(R.layout.map_fragment_direction_clear_dialog_2, null);
 
         // Set the view to the AlertDialog
         alertDialog.setView(view);
 
         Button directionBtn = view.findViewById(R.id.btn_direction_map_dialog);
         directionBtn.setOnClickListener(View->{
-            //showAddToServerDialog(m,alertDialog);
-
-
-
-/*
-
-            RoadManager roadManager = new OSRMRoadManager(ctx);
-            ArrayList<GeoPoint> waypoints = new ArrayList<>();
-            waypoints.add(startPoint);
-            waypoints.add(endPoint);
-            Road road = roadManager.getRoad(waypoints);
-
-*/
+            createDirection(m);
 
             alertDialog.cancel();
 
         });
 
         //if click dismiss alert dialog and and the marker overlay
-        Button addBookmarkBtn = view.findViewById(R.id.btn_book_mark_map_dialog);
-        addBookmarkBtn.setOnClickListener(View->{
-
-            GeoPoint location = m.getPosition();
-
-            ParseQuery<ParseObject> query1  = new ParseQuery<ParseObject>("Bookmarks");
-            query1.whereEqualTo("user_id", ParseUser.getCurrentUser().getObjectId());
-            query1.whereEqualTo("location",new ParseGeoPoint(location.getLatitude(),location.getLongitude()));
-            query1.setLimit(1);
-            query1.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> objects, ParseException e) {
-                    if (e==null){
-                        if (objects.size()>0){  //already bookmarked
-                            Log.d(TAG, "done: -> this place is already bookmarked");
-                        } else {  //not bookmarked
-                            //proceeded to upload the bookmark
-
-                            //step 1:
-                            //find details about the coordinate
-                            Geocoder geocoder;
-                            List<Address> addresses = null;
-                            geocoder = new Geocoder(getContext(), Locale.getDefault());
-
-                            try {
-                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-
-                            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                            String city = addresses.get(0).getLocality();
-                            String state = addresses.get(0).getAdminArea();
-                            String country = addresses.get(0).getCountryName();
-                            String postalCode = addresses.get(0).getPostalCode();
-                            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-
-                            //step 2:
-                            //upload
-                            ParseObject bookmarks = new ParseObject("Bookmarks");
-                            bookmarks.put("title", city+" - "+country);
-                            bookmarks.put("details",knownName + "," + address +", " + state +", " + city+" - "+country);
-                            bookmarks.put("user_id", ParseUser.getCurrentUser().getObjectId());
-
-                            //location upload
-                            ParseGeoPoint pGeoPoint = new ParseGeoPoint( m.getPosition().getLatitude(), m.getPosition().getLongitude());
-                            bookmarks.put("location", pGeoPoint);
-
-                            bookmarks.saveInBackground(new SaveCallback() { //upload file to the parse server
-                                //using this call back function will return extra information like if it failed or succeed to upload the file
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e==null) { // no error occurred
-                                        //upload successful
-                                        alertDialog.dismiss();
-                                    } else {
-                                        e.getMessage();
-                                        e.getStackTrace();
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-
-                }
-            });
-
-
-
-            //alertDialog.dismiss();
-            //map.getMapView().getOverlays().remove(m);
-        });
-
-        //if click dismiss alert dialog and and the marker overlay
         Button clearBtn = view.findViewById(R.id.btn_clear_map_dialog);
         clearBtn.setOnClickListener(View->{
+            onDirectionClearMarker();
             alertDialog.dismiss();
-            //map.getMapView().getOverlays().remove(m);
+            //binding.map.getOverlays().remove(m);
+            binding.map.invalidate();
         });
 
         alertDialog.show();
     }
+
+
+
+    public void createDirection(Marker m){
+        RoadManager roadManager = new OSRMRoadManager(ctx, Configuration.getInstance().getUserAgentValue());
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+        waypoints.add(map.getMyLocationOverlay().getMyLocation());
+        GeoPoint endPoint = m.getPosition();
+        waypoints.add(endPoint);
+
+        //
+        ((OSRMRoadManager)roadManager).setMean(OSRMRoadManager.MEAN_BY_BIKE);
+
+
+        Road road = roadManager.getRoad(waypoints);
+        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+        roadOverlay.setId("direction_overlay");
+        binding.map.getOverlays().add(roadOverlay);
+        binding.map.invalidate();
+
+        Drawable nodeIcon = getResources().getDrawable(R.drawable.ic_marker_node_24);
+        for (int i=0; i<road.mNodes.size(); i++){
+            RoadNode node = road.mNodes.get(i);
+            Marker nodeMarker = new Marker(binding.map);
+            nodeMarker.setId("direction_node");
+            nodeMarker.setPosition(node.mLocation);
+            nodeMarker.setIcon(nodeIcon);
+            nodeMarker.setTitle("Step "+i);
+            nodeMarker.setSnippet(node.mInstructions);
+            Log.d(TAG, "createDirection: "+node.mInstructions);
+            Log.d(TAG, "createDirection: "+node.mManeuverType);
+            Log.d(TAG, "createDirection: "+node.mNextRoadLink);
+            Log.d(TAG, "createDirection: "+node.describeContents());
+            nodeMarker.setSubDescription(Road.getLengthDurationText(ctx, node.mLength, node.mDuration));
+            nodeMarker.setImage(getManeuverDrawable(node.mManeuverType));
+            binding.map.getOverlays().add(nodeMarker);
+        }
+
+        binding.map.invalidate();
+    }
+
+    public Drawable getManeuverDrawable(int maneuverType){
+        switch (maneuverType){
+            case 3:
+                return getResources().getDrawable(R.drawable.ic_direction_turn_slight_left_3);
+            case 4:
+                return getResources().getDrawable(R.drawable.ic_direction_turn_left_4);
+            case 6:
+                return getResources().getDrawable(R.drawable.ic_direction_turn_slight_right_6);
+            case 7:
+                return getResources().getDrawable(R.drawable.ic_direction_turn_right_7);
+            case 24:
+                return getResources().getDrawable(R.drawable.ic_direction_start_end_24);
+            default:
+                return getResources().getDrawable(R.drawable.ic_direction_continue_24);
+        }
+
+    }
+
+
+    public void onDirectionClearMarker(){
+        Log.d(TAG, "onClearMarker: get number of overlays"+binding.map.getOverlays().size());
+
+        for(int i=0;i<binding.map.getOverlays().size();i++){
+            Overlay overlay= binding.map.getOverlays().get(i);
+
+            if (overlay instanceof Polyline && ((Polyline) overlay).getId().equals("direction_overlay") ){
+                binding.map.getOverlays().remove(overlay);
+            }
+
+            if(overlay instanceof Marker && ((Marker)overlay).getId().equals("direction_node") ){
+                binding.map.getOverlays().remove(overlay);
+                onDirectionClearMarker();
+            }
+        }
+        //binding.map.invalidate();
+    }
+
+
 
 }

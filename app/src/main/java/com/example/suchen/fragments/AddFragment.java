@@ -128,10 +128,11 @@ public class AddFragment extends Fragment {
             //tile servers will get you banned based on this string
 
         } else {
+            Log.d(TAG, "onCreate: we found user null");
             //user not logged in
             // show the signup or login screen
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer_mainActivity,new LoginFragment())
+                    .replace(R.id.fragmentContainer_mainActivity,new LoginFragment(this))
                     .commit();
         }
 
@@ -140,6 +141,7 @@ public class AddFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: stated");
         // Inflate the layout for this fragment
         binding =  FragmentAddBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -147,6 +149,7 @@ public class AddFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated: started");
         super.onViewCreated(view, savedInstanceState);
         this.setDefaultTileSource();
 

@@ -1,14 +1,22 @@
 plugins {
     id 'com.android.application'
-   // id 'java'
+    //id 'java'
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/naz/Documents/androidStudio-keystone/suchen-apk-keystore')
+            storePassword 'keystore'
+            keyAlias 'key0'
+            keyPassword 'keystore'
+        }
+    }
     compileSdk 33
 
     defaultConfig {
         applicationId "com.example.suchen"
-        minSdk 21
+        minSdk 23
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -35,7 +43,7 @@ android {
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -50,19 +58,17 @@ dependencies {
 
     //osmdroid
     implementation 'org.osmdroid:osmdroid-android:6.1.16'
-    implementation 'com.github.MKergall:osmbonuspack:6.9.0'
+    //implementation 'com.github.MKergall:osmbonuspack:6.9.0'
     implementation 'org.osmdroid:osmdroid-geopackage:6.1.10'
     //implementation 'org.osmdroid:osmdroid-wms:6.1.17'
     //implementation 'org.osmdroid:osmdroid-mapsforge:6.1.17'
 
     //
-    /*
-    compile(name:'osmbonuspack_6.9.0', ext:'aar')
-    implementation project(":OSMBonusPack")
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'org.apache.commons:commons-lang3:3.8.1'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'*/
+    implementation(name:'osmbonuspack_6.9.0', ext:'aar')
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+
 
 
 }

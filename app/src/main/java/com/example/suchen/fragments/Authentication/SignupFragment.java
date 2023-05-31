@@ -29,8 +29,11 @@ import com.example.suchen.databinding.FragmentSignupBinding;
 public class SignupFragment extends Fragment {
     private FragmentSignupBinding binding;
 
-    public SignupFragment() {
+    Fragment returnFragment;
+
+    public SignupFragment(Fragment returnFragment) {
         // Required empty public constructor
+        this.returnFragment = returnFragment;
     }
 
 
@@ -92,7 +95,7 @@ public class SignupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer_mainActivity,new LoginFragment())
+                        .replace(R.id.fragmentContainer_mainActivity,new LoginFragment(returnFragment))
                         .commit();
             }
         };

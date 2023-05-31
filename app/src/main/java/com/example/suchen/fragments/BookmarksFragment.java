@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,25 +55,32 @@ public class BookmarksFragment extends Fragment implements RecyclerViewClickList
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: started");
         super.onCreate(savedInstanceState);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
+
         if (currentUser != null) {
             // do stuff with the user
             Log.d(TAG, "onCreate: login user->"+currentUser.getUsername());
+            fetchDataFromServer();
 
         } else {
+            Log.d(TAG, "onCreate: we got null in current user");
             //user not logged in
             // show the signup or login screen
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer_mainActivity,new LoginFragment())
+                    .replace(R.id.fragmentContainer_mainActivity,new LoginFragment(this))
                     .commit();
+
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: started");
         // Inflate the layout for this fragment
         binding =  FragmentBookmarksBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -79,19 +88,23 @@ public class BookmarksFragment extends Fragment implements RecyclerViewClickList
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated: started");
         super.onViewCreated(view, savedInstanceState);
 
         setRecViewAdapter();
     }
 
     private void setRecViewAdapter() {
+        Log.d(TAG, "setRecViewAdapter: started");
         bookmarksAdapter = new BookmarksAdapter(this);
         bookmarksAdapter.setAdapterData(bookmarkLocationArrayList);
         binding.recViewBookmarksFragment.setAdapter(bookmarksAdapter);
         binding.recViewBookmarksFragment.setLayoutManager(new LinearLayoutManager(this.getContext()));
         //bookmarksAdapter.setAdapterData(fetchDataFromServer());
         Log.d(TAG, "setRecViewAdapter: "+bookmarksAdapter.getItemCount());
-        fetchDataFromServer();
+
+        //this should be the right place to call this function insted of onCreate method
+        //fetchDataFromServer();
         Log.d(TAG, "setRecViewAdapter: "+bookmarksAdapter.getItemCount());
 
         //swipe implement

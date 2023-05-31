@@ -14,12 +14,14 @@
         <entry key="app/src/main/res/drawable/ic_baseline_push_pin_24.xml" value="0.127" />
         <entry key="app/src/main/res/drawable/ic_baseline_water_drop_24.xml" value="0.301" />
         <entry key="app/src/main/res/drawable/ic_bookmarks_24.xml" value="0.299" />
+        <entry key="app/src/main/res/drawable/ic_direction_continue_24.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/ic_edit_location_alt_24.xml" value="0.299" />
         <entry key="app/src/main/res/drawable/ic_home_24.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_layers_24.xml" value="0.301" />
         <entry key="app/src/main/res/drawable/ic_logout_24.xml" value="0.2525" />
         <entry key="app/src/main/res/drawable/ic_map_24.xml" value="0.299" />
+        <entry key="app/src/main/res/drawable/ic_marker_node_24.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/ic_push_pin_green.xml" value="0.127" />
         <entry key="app/src/main/res/drawable/ic_push_pin_red.xml" value="0.2125" />
         <entry key="app/src/main/res/drawable/ic_settings_24.xml" value="0.299" />
@@ -47,6 +49,7 @@
         <entry key="app/src/main/res/layout/fragment_show_bookmark.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_signup.xml" value="0.25" />
         <entry key="app/src/main/res/layout/map_fragment_direction_clear_dialog.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/map_fragment_direction_clear_dialog_2.xml" value="0.1" />
         <entry key="app/src/main/res/layout/map_fragment_showDirection_clear_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/map_fragment_show_direction_clear_dialog.xml" value="0.375" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.28229166666666666" />

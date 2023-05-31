@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
@@ -52,10 +53,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
         //setContentView(R.layout.activity_main);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setOnTouchClickListenerToRootView();
+
+/*
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(getResources().getString(R.string.toolbar_title));
         }
 
+*/
 
         //initViews();
         initBottomNavView();

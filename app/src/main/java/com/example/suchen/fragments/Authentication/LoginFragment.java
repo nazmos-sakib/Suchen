@@ -39,9 +39,12 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment->";
     private FragmentLoginBinding binding;
 
+    Fragment returnFragment;
 
-    public LoginFragment() {
+
+    public LoginFragment( Fragment returnFragment) {
         // Required empty public constructor
+        this.returnFragment = returnFragment;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class LoginFragment extends Fragment {
                             Toast.makeText(getActivity().getApplicationContext(),"login successful", Toast.LENGTH_SHORT).show();
 
                             getActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.fragmentContainer_mainActivity,new BookmarksFragment(getContext()))
+                                    .replace(R.id.fragmentContainer_mainActivity, returnFragment)
                                     .commit();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -159,7 +162,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainer_mainActivity,new SignupFragment())
+                        .replace(R.id.fragmentContainer_mainActivity,new SignupFragment(returnFragment))
                         .commit();
             }
         };
